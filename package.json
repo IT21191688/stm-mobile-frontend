@@ -10,9 +10,10 @@
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "1.18.2",
-   "@react-navigation/native": "^6.0.10",
+    "@react-navigation/native": "^6.0.10",
     "@react-navigation/native-stack": "^6.7.0",
     "@react-navigation/stack": "^6.2.1",
+    "@rneui/themed": "^4.0.0-rc.8",
     "axios": "^1.6.2",
     "expo": "~49.0.15",
     "expo-image": "~1.3.5",
@@ -24,6 +25,11 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
+  },
+  "rnpm": {
+    "assets": [
+      "./assets/fonts/"
+    ]
   },
   "private": true
 }
