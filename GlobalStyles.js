@@ -1,0 +1,18 @@
+export const FontFamily = {
+    dMSansBold: "DMSans-Bold",
+    dMSansRegular: "DMSans-Regular",
+    openSansSemiBold: "OpenSans-SemiBold",
+    semibold14: "Poppins-SemiBold",
+    medium14: "Poppins-Medium",
+    bold22: "Poppins-Bold",
+    circularStd: "Circular Std",
+    textXsRegular: "Inter-Regular",
+    archivoExtraBoldItalic: "Archivo-ExtraBoldItalic",
+    displayXsMedium: "Inter-Medium",
+    interSemiBold: "Inter-SemiBold",
+    sFPro: "SF Pro",
+    archivoBlackItalic: "Archivo-BlackItalic",
+    sFProText: "SF Pro Text",
+    archivoBold: "Archivo-Bold",
+    sFProDisplay: "SF Pro Display",
+};
