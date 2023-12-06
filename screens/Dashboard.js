@@ -5,10 +5,22 @@ import { useNavigation } from "@react-navigation/native";
 const Dashboard = () => {
     const navigation = useNavigation();
 
+
+
+    const handleAttendance = () => {
+
+
+        navigation.navigate('QrScan')
+
+
+    }
+
+
+
+
     return (
 
         <>
-
             <View style={styles.heading}>
 
                 <Text style={styles.profileName}>
@@ -21,18 +33,16 @@ const Dashboard = () => {
                     source={require("../assets/profileimg.png")}
                 />
 
-
-
             </View>
 
 
             <View style={styles.container}>
 
-
+                <Text style={styles.dashBoardText}>Dashboard</Text>
 
                 <View style={styles.rowBoxes}>
 
-                    <TouchableOpacity style={styles.box}>
+                    <TouchableOpacity style={styles.box} onPress={handleAttendance}>
 
                         <Image
                             style={styles.image}
@@ -52,12 +62,7 @@ const Dashboard = () => {
                         />
                         <Text style={styles.text}>Student Management</Text>
 
-
-
-
                     </TouchableOpacity>
-
-
 
                 </View>
 
@@ -86,8 +91,6 @@ const Dashboard = () => {
 
                     </TouchableOpacity>
 
-
-
                 </View>
 
 
@@ -105,8 +108,6 @@ const Dashboard = () => {
                     </TouchableOpacity>
 
                 </View>
-
-
 
             </View>
 
@@ -152,6 +153,15 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingTop: 15
+    },
+    dashBoardText: {
+        color: '#150A33',
+        //fontFamily: 'DM Sans',
+        fontSize: 20,
+        fontStyle: 'normal',
+        fontWeight: '700',
+        //lineHeight: 'normal',
+        // Additional styles for the dashboard text if required
     },
     box: {
         width: '47%',

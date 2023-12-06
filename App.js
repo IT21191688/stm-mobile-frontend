@@ -3,6 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "./screens/Login";
 import Dashboard from "./screens/Dashboard";
+import QrScan from "./screens/QrScan";
 
 const Stack = createNativeStackNavigator();
 
@@ -16,6 +17,14 @@ const App = () => {
           component={Dashboard}
           options={{ headerShown: false }}
         />
+
+        <Stack.Screen
+          name="QrScan"
+          component={QrScan}
+          options={{ headerShown: false }}
+        />
+
+
         <Stack.Screen
           name="Login"
           component={Login}
