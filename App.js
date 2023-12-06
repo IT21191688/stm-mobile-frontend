@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "./screens/Login";
 import Dashboard from "./screens/Dashboard";
 import QrScan from "./screens/QrScan";
+import StudentDetailsScreen from "./screens/StudentDetailsScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -17,6 +18,13 @@ const App = () => {
           component={Dashboard}
           options={{ headerShown: false }}
         />
+
+        <Stack.Screen
+          name="StudentDetailsScreen"
+          component={StudentDetailsScreen}
+          options={{ headerShown: false }}
+        />
+
 
         <Stack.Screen
           name="QrScan"

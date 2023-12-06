@@ -17,9 +17,17 @@ const QrScan = () => {
 
     const handleBarCodeScanned = ({ type, data }) => {
         setScanned(true);
-        // Do something with the scanned QR code data
-        console.log(`Bar code with type ${type} and data ${data} has been scanned!`);
-        // You can navigate to a different screen or perform other actions here
+
+        if (scanned === true) {
+
+
+
+
+
+        }
+
+
+
     };
 
     if (hasPermission === null) {
