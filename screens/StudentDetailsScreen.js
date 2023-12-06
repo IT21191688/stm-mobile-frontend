@@ -29,9 +29,14 @@ const StudentDetailsScreen = () => {
     ];
 
     const handleAttendance = () => {
-        // Functionality when the button is pressed
-        // Add logic to handle attendance here
+
+
     };
+
+    const handlePayment = () => {
+
+        navigation.navigate('PayScreen')
+    }
 
 
     const renderItem = ({ item }) => (
@@ -50,7 +55,7 @@ const StudentDetailsScreen = () => {
                 <Text style={styles.buttonText}>Attend</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.payBtn} onPress={handleAttendance}>
+            <TouchableOpacity style={styles.payBtn} onPress={handlePayment}>
                 <Text style={styles.buttonText}>Pay</Text>
             </TouchableOpacity>
 
@@ -94,6 +99,7 @@ const StudentDetailsScreen = () => {
 
                 </View>
                 <FlatList
+                    showsVerticalScrollIndicator={false}
                     style={styles.studentClassContainer}
                     data={data}
                     keyExtractor={(item) => item.id}

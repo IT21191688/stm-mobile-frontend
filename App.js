@@ -5,6 +5,7 @@ import Login from "./screens/Login";
 import Dashboard from "./screens/Dashboard";
 import QrScan from "./screens/QrScan";
 import StudentDetailsScreen from "./screens/StudentDetailsScreen";
+import PayScreen from "./screens/PayScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -16,6 +17,13 @@ const App = () => {
         <Stack.Screen
           name="Dashboard"
           component={Dashboard}
+          options={{ headerShown: false }}
+        />
+
+
+        <Stack.Screen
+          name="PayScreen"
+          component={PayScreen}
           options={{ headerShown: false }}
         />
 
