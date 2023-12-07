@@ -23,6 +23,14 @@ const Dashboard = () => {
 
     }
 
+    const handleTeacher = () => {
+
+
+        navigation.navigate('StudentDetailsScreen')
+
+
+    }
+
 
 
     return (
@@ -76,7 +84,7 @@ const Dashboard = () => {
 
                 <View style={styles.rowBoxes}>
 
-                    <TouchableOpacity style={styles.box}>
+                    <TouchableOpacity style={styles.box} onPress={handleTeacher}>
 
                         <Image
                             style={styles.image}

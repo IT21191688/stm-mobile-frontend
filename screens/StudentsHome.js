@@ -22,13 +22,14 @@ const StudentsHome = () => {
 
 
     const data = [
-        { id: '1', text: 'Class Name' },
-        { id: '2', text: 'Hello Hello' },
-        { id: '3', text: 'Hello Hello' },
-        { id: '4', text: 'Hello Hello' },
-        // Add more data items as needed
+        { id: '1', text: 'Mathematics' },
+        { id: '2', text: 'Science' },
+        { id: '3', text: 'History' },
+        { id: '4', text: 'Geography' },
+        { id: '5', text: 'English' },
+        { id: '6', text: 'English' },
+        // Add more data as needed
     ];
-
 
 
     const handleAttendance = () => {
@@ -44,6 +45,13 @@ const StudentsHome = () => {
 
         navigation.navigate('StudentDetailsScreen')
 
+
+    }
+
+
+    handleCreateStudent = () => {
+
+        navigation.navigate('CreateStudent')
 
     }
 
@@ -141,8 +149,15 @@ const StudentsHome = () => {
 
 
 
+
+
+
                     </View>
 
+
+                    <TouchableOpacity style={styles.createNewStudent} onPress={handleCreateStudent}>
+                        <Text style={styles.createStudentText}>Create Student</Text>
+                    </TouchableOpacity>
 
 
                 </View>
@@ -200,7 +215,7 @@ const styles = StyleSheet.create({
     },
     searchContainer: {
         width: '100%',
-        height: '30%',
+        height: '38%',
         borderRadius: 30,
         backgroundColor: '#E5800A',
         padding: 10
@@ -252,8 +267,26 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
 
+    createNewStudent: {
+        width: 291,
+        height: 39,
+        borderRadius: 20,
+        backgroundColor: '#E0C6C6',
+        top: 10
+        // Add other styles for positioning, shadows, etc., if needed
+    },
+    createStudentText: {
+
+        textAlign: 'center',
+        top: 5,
+        fontSize: 17,
+        fontWeight: '800'
+
+    },
+
     studentClassContainer: {
-        paddingTop: 20
+        paddingTop: 30,
+
     },
 
     studentClass: {

@@ -33,6 +33,11 @@ const StudentDetailsScreen = () => {
 
     };
 
+    const handleEdit = () => {
+
+
+    }
+
     const handlePayment = () => {
 
         navigation.navigate('PayScreen')
@@ -96,6 +101,11 @@ const StudentDetailsScreen = () => {
 
                     <Text style={styles.studentNameText}>Sadeepa Lakshan</Text>
                     <Text style={styles.studentGradeText}>Grade 10</Text>
+
+
+                    <TouchableOpacity style={styles.editBtn} onPress={handleEdit}>
+                        <Text style={styles.buttonText}>Edit</Text>
+                    </TouchableOpacity>
 
                 </View>
                 <FlatList
@@ -195,7 +205,8 @@ const styles = StyleSheet.create({
 
     },
     studentClassContainer: {
-        paddingTop: 20
+        paddingTop: 20,
+        height: 'auto'
     },
 
     studentClass: {
@@ -244,6 +255,19 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         left: '60%',
         top: '-28%'
+
+    }
+    ,
+    editBtn: {
+        width: 101,
+        height: 39,
+        flexShrink: 0,
+        borderRadius: 20,
+        backgroundColor: '#78726B',
+        justifyContent: 'center',
+        alignItems: 'center',
+        left: '60%',
+        top: '-48%'
 
     }
 });

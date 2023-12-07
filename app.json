@@ -25,6 +25,14 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "permissions": {
+      "mediaLibrary": {
+        "access": "read_write"
+      },
+      "camera": {
+        "type": "front"
+      }
     }
   }
 }
