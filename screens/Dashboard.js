@@ -18,7 +18,7 @@ const Dashboard = () => {
     const handleStudentDetails = () => {
 
 
-        navigation.navigate('StudentDetailsScreen')
+        navigation.navigate('StudentsHome')
 
 
     }
