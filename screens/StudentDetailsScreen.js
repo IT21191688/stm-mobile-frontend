@@ -20,10 +20,6 @@ const StudentDetailsScreen = () => {
     const fetchData = async () => {
         try {
             await getStudentDetails();
-            await getClassDetails();
-
-
-            await filteringClassDetails();
             await getStudentAttendance();
 
         } catch (error) {
@@ -50,6 +46,7 @@ const StudentDetailsScreen = () => {
 
             if (response.data.isSuccessful) {
                 setStudentDetails(response.data.data);
+                console.log("studentDetails Success")
             } else {
                 throw new Error("Failed to get student details: " + response.data.message);
             }
@@ -58,30 +55,6 @@ const StudentDetailsScreen = () => {
         }
     };
 
-    const getClassDetails = async () => {
-        try {
-            const token = await AsyncStorage.getItem('token');
-            if (!token) {
-                throw new Error('Token is missing in AsyncStorage');
-            }
-            const headers = {
-                'Authorization': `Bearer ${token}`,
-            };
-
-            const response = await axios.get(
-                `https://stm-backend.onrender.com/api/v1/class/getAllClassdetails`,
-                { headers }
-            );
-
-            if (response.data.isSuccessful) {
-                setClassDetails(response.data.data);
-            } else {
-                throw new Error("Failed to get class details: " + response.data.message);
-            }
-        } catch (error) {
-            throw new Error('Error fetching class details:', error);
-        }
-    };
 
     const getStudentAttendance = async () => {
         try {
@@ -99,79 +72,67 @@ const StudentDetailsScreen = () => {
             const month = currentDate.getMonth() + 1;
             const year = currentDate.getFullYear();
 
-            const classes = studentDetails.classes;
+            try {
+                const response = await axios.get(
+                    `https://stm-backend.onrender.com/api/v1/attendance/getAttendancewithAssignClasses/${studentId}/${month}/${year}`,
+                    { headers }
+                );
 
-            const classAttendancePromises = classes.map(async (classId) => {
-                try {
-                    const response = await axios.get(
-                        `https://stm-backend.onrender.com/api/v1/attendance/getAttendance/${studentId}/${classId}/${month}/${year}`,
-                        { headers }
-                    );
+                if (response.data.isSuccessful) {
+                    setFilteredClassDetails(response.data.data);
 
-                    console.log("Response for classId:", classId, response.data.data);
-
-                    if (response.data.isSuccessful) {
-                        const attendId = response.data.data.length > 0 ? response.data.data[0]._id : null;
-                        return { classId, days: response.data.data.length > 0 ? response.data.data[0].days : [], attendId: attendId };
-                    } else {
-                        return { classId, days: [], attendId: null };
-                    }
-                } catch (error) {
-                    console.error('Error fetching attendance for class', classId, ':', error);
-                    return { classId, days: [], attendId: null };
+                } else {
+                    console.error('Failed to fetch attendance:', response.data.message);
                 }
-            });
-
-            const classAttendanceResults = await Promise.all(classAttendancePromises);
-
-            console.log("Attendance Results:", classAttendanceResults);
-
-            const updatedFilteredClassDetails = assignedClassDetails.map((classDetail) => {
-                console.log("classDetails " + classDetail._id)
-                const foundAttendance = classAttendanceResults.find((attendance) => attendance.classId == classDetail._id);
-
-                console.log("found attendance", foundAttendance);
-                if (foundAttendance) {
-                    return { ...classDetail, atendId: foundAttendance.attendId, days: foundAttendance.days };
-                }
-                return classDetail;
-            });
-
-            console.log("FilteredData", updatedFilteredClassDetails);
-
-            setFilteredClassDetails(updatedFilteredClassDetails);
-            console.log(filteredClassDetails);
+            } catch (error) {
+                console.error('Error fetching attendance:', error);
+            }
         } catch (error) {
             throw new Error('Error getting student attendance:', error.message);
         }
     };
 
 
-    const filteringClassDetails = async () => {
+    const handleAttendance = async (id) => {
         try {
-            if (studentDetails && studentDetails.classes && classDetails.length > 0) {
-                const classes = studentDetails.classes;
+            const token = await AsyncStorage.getItem('token');
+            if (!token) {
+                throw new Error('Token is missing in AsyncStorage');
+            }
 
-                const classPromises = classes.map(async (classId) => {
-                    const foundClass = classDetails.find((classDetail) => classDetail._id === classId);
-                    return foundClass;
-                });
+            const headers = {
+                'Authorization': `Bearer ${token}`,
+            };
 
-                const assignedClasses = await Promise.all(classPromises);
-                setAssignedClassDetails(assignedClasses);
-                console.log("assigned classes" + assignedClassDetails);
+            const today = new Date(); // Get today's date
+
+            const newDate = {
+                newDate: [
+                    { value: 1 }
+                    // You can add more objects for additional values if needed
+                ]
+            }
+            try {
+                const response = await axios.patch(
+                    `https://stm-backend.onrender.com/api/v1/updateAttendance/${id}`,
+                    { newDate },
+                    { headers }
+                );
+
+                if (response.data.isSuccessful) {
+                    console.log('Attendance updated successfully:', response.data.data);
+                    // You might want to update state or perform other operations here
+                } else {
+                    console.error('Failed to update attendance:', response.data.message);
+                }
+            } catch (error) {
+                console.error('Error updating attendance:', error);
             }
         } catch (error) {
-            console.error('Error in filteringClassDetails:', error);
+            throw new Error('Error getting student attendance:', error.message);
         }
     };
 
-    const handleAttendance = () => {
-
-
-
-
-    };
 
     const handleEdit = () => {
 
@@ -185,24 +146,16 @@ const StudentDetailsScreen = () => {
         navigation.navigate('PayScreen')
     }
 
-    //console.log(filteredClassDetails)
-    const sampleData = [
-        {
-            "__v": 0,
-            "id": "6569a5840ab3f01da08d8b85",
-            "atendId": "6573318d0b3ba40c3f82b3e2",
-            "classGrade": "Grade 11",
-            "className": "Science",
-            "createdAt": "2023-12-01T09:21:08.724Z",
-            "days": [0.1],
-            "price": 1000,
-            "teacherName": "John Doe",
-            "updatedAt": "2023-12-01T09:33:54.671Z"
-        },
-        // Add more items following the same structure if needed
-    ];
-
-    //console.log("=================" + sampleData);
+    const calculateProgress = (daysLength) => {
+        if (daysLength === 0) {
+            return 0; // If no days recorded, progress is 0
+        } else {
+            const MAX_DAYS = 5
+            // Calculate progress based on the length of days array
+            Alert.alert(Math.min(1, daysLength / MAX_DAYS))
+            return Math.min(1, daysLength / MAX_DAYS); // Ensure the progress does not exceed 1
+        }
+    };
 
     const renderItem = ({ item }) => (
         <View style={styles.studentClass}>
@@ -212,11 +165,10 @@ const StudentDetailsScreen = () => {
             <ProgressBarAndroid
                 styleAttr="Horizontal"
                 indeterminate={false}
-                progress={0.3}
+                progress={calculateProgress(item.attendance.days.length)}
                 style={styles.progressBar}
             />
-
-            <TouchableOpacity style={styles.attendBtn} onPress={handleAttendance}>
+            <TouchableOpacity style={styles.attendBtn} onPress={() => handleAttendance(item.attendance._id)}>
                 <Text style={styles.buttonText}>Attend</Text>
             </TouchableOpacity>
 
