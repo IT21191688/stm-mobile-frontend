@@ -4,6 +4,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 
 const LoadingPage = () => {
+
+
     const navigation = useNavigation();
 
     useEffect(() => {
@@ -14,15 +16,15 @@ const LoadingPage = () => {
 
                 if (email && password) {
                     // If credentials exist, navigate to Dashboard
-                    navigation.replace('Dashboard');
+                    navigation.navigate('Dashboard');
                 } else {
                     // Navigate to Login screen if credentials not found
-                    navigation.replace('Login');
+                    navigation.navigate('Login');
                 }
             } catch (error) {
-                console.error('Error checking credentials:', error);
+                console.log('Error checking credentials:', error);
                 // Navigate to Login screen if an error occurs
-                navigation.replace('Login');
+                navigation.navigate('Login');
             }
         };
 

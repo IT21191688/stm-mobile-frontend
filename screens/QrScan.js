@@ -33,9 +33,9 @@ const QrScan = () => {
     const handleScan = async (type, data) => {
         if (type === 256) {
             try {
-                const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTY4YjFmZjlkZTcyYWNhNjY2ODA5YTIiLCJlbWFpbCI6InNhZGVlcGFsYWtzaGFuMDgwNEBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MDIwMTUwNDIsImV4cCI6MTcwMjYxOTg0Mn0.eUCGCMZJm3EjBRfX2z5WjmjCcxOkiGQI5qfww2cT8DA"
+                //const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTY4YjFmZjlkZTcyYWNhNjY2ODA5YTIiLCJlbWFpbCI6InNhZGVlcGFsYWtzaGFuMDgwNEBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MDIwMTUwNDIsImV4cCI6MTcwMjYxOTg0Mn0.eUCGCMZJm3EjBRfX2z5WjmjCcxOkiGQI5qfww2cT8DA"
 
-                //const token = await AsyncStorage.getItem('token');
+                const token = await AsyncStorage.getItem('token');
                 if (!token) {
                     console.error('Token is missing in AsyncStorage');
                     return;

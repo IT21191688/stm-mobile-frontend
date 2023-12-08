@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, TextInput, View, TouchableOpacity, Image, Dimensions } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Dashboard = () => {
     const navigation = useNavigation();
@@ -27,6 +28,21 @@ const Dashboard = () => {
 
 
         navigation.navigate('StudentDetailsScreen')
+
+
+    }
+
+
+    const handleLogout = async () => {
+
+        try {
+
+            await AsyncStorage.clear();
+            Alert.alert("Logout Success")
+            navigation.navigate('Login');
+        } catch (error) {
+            console.log('Error while logging out:', error);
+        }
 
 
     }
@@ -122,7 +138,24 @@ const Dashboard = () => {
 
                     </TouchableOpacity>
 
+
+                    <TouchableOpacity style={styles.box} onPress={handleLogout}>
+
+                        <Image
+                            style={styles.image}
+                            contentFit="cover"
+                            source={require("../assets/payment-gateway.png")}
+                        />
+                        <Text style={styles.text}>LogOut</Text>
+
+                    </TouchableOpacity>
+
+
+
                 </View>
+
+
+
 
             </View>
 

@@ -4,6 +4,8 @@ import { StyleSheet, Text, TextInput, View, TouchableOpacity, Image, Dimensions,
 import { useNavigation } from "@react-navigation/native";
 import { Picker } from "@react-native-picker/picker";
 import * as ImagePicker from 'expo-image-picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const CreateStudent = () => {
     const navigation = useNavigation();
@@ -70,8 +72,8 @@ const CreateStudent = () => {
 
         try {
 
-            const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTY4YjFmZjlkZTcyYWNhNjY2ODA5YTIiLCJlbWFpbCI6InNhZGVlcGFsYWtzaGFuMDgwNEBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MDE5NzMxMDYsImV4cCI6MTcwMjU3NzkwNn0.de_o7V7FEnfY_Gj-0Xl7je9sw3n8WDwJWjV7QNZcg8o"
-            //const token = await AsyncStorage.getItem('token');
+            //const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTY4YjFmZjlkZTcyYWNhNjY2ODA5YTIiLCJlbWFpbCI6InNhZGVlcGFsYWtzaGFuMDgwNEBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MDE5NzMxMDYsImV4cCI6MTcwMjU3NzkwNn0.de_o7V7FEnfY_Gj-0Xl7je9sw3n8WDwJWjV7QNZcg8o"
+            const token = await AsyncStorage.getItem('token');
             if (!token) {
                 console.error('Token is missing in AsyncStorage');
                 return;
@@ -126,9 +128,9 @@ const CreateStudent = () => {
 
         try {
 
-            const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTY4YjFmZjlkZTcyYWNhNjY2ODA5YTIiLCJlbWFpbCI6InNhZGVlcGFsYWtzaGFuMDgwNEBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MDE5NzMxMDYsImV4cCI6MTcwMjU3NzkwNn0.de_o7V7FEnfY_Gj-0Xl7je9sw3n8WDwJWjV7QNZcg8o"
+            // const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTY4YjFmZjlkZTcyYWNhNjY2ODA5YTIiLCJlbWFpbCI6InNhZGVlcGFsYWtzaGFuMDgwNEBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MDE5NzMxMDYsImV4cCI6MTcwMjU3NzkwNn0.de_o7V7FEnfY_Gj-0Xl7je9sw3n8WDwJWjV7QNZcg8o"
 
-            //const token = await AsyncStorage.getItem('token');
+            const token = await AsyncStorage.getItem('token');
             if (!token) {
                 console.error('Token is missing in AsyncStorage');
                 return;

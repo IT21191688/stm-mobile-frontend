@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
@@ -16,41 +16,68 @@ import LoadingPage from "./screens/LoadingPage";
 const Stack = createNativeStackNavigator();
 
 const App = () => {
-  useEffect(() => {
-    checkCredentials();
-  }, []);
-
-  const checkCredentials = async () => {
-    try {
-      const email = await AsyncStorage.getItem('email');
-      const password = await AsyncStorage.getItem('password');
-
-      if (email && password) {
-        // If credentials exist, navigate to Dashboard
-        navigation.replace('Dashboard');
-      } else {
-        // Navigate to Login screen if credentials not found
-        navigation.replace('Login');
-      }
-    } catch (error) {
-      console.error('Error checking credentials:', error);
-      // Navigate to Login screen if an error occurs
-      navigation.replace('Login');
-    }
-  };
-
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="LoadingPage" screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="LoadingPage" component={LoadingPage} />
-        <Stack.Screen name="Dashboard" component={Dashboard} />
-        <Stack.Screen name="StudentsHome" component={StudentsHome} />
-        <Stack.Screen name="PayScreen" component={PayScreen} />
-        <Stack.Screen name="StudentDetailsScreen" component={StudentDetailsScreen} />
-        <Stack.Screen name="EditStudent" component={EditStudent} />
-        <Stack.Screen name="CreateStudent" component={CreateStudent} />
-        <Stack.Screen name="QrScan" component={QrScan} />
-        <Stack.Screen name="Login" component={Login} />
+
+
+        <Stack.Screen
+          name="LoadingPage"
+          component={LoadingPage}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name="Dashboard"
+          component={Dashboard}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name="StudentsHome"
+          component={StudentsHome}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name="PayScreen"
+          component={PayScreen}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name="StudentDetailsScreen"
+          component={StudentDetailsScreen}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name="EditStudent"
+          component={EditStudent}
+          options={{ headerShown: false }}
+        />
+
+
+        <Stack.Screen
+          name="CreateStudent"
+          component={CreateStudent}
+          options={{ headerShown: false }}
+        />
+
+
+
+        <Stack.Screen
+          name="QrScan"
+          component={QrScan}
+          options={{ headerShown: false }}
+        />
+
+
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{ headerShown: false }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

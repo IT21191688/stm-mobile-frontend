@@ -1,8 +1,10 @@
+import axios from 'axios';
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, TextInput, View, TouchableOpacity, Image, Dimensions } from "react-native";
+import { StyleSheet, Text, TextInput, View, TouchableOpacity, Image, Dimensions, Alert } from "react-native";
 import { CheckBox } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
 import { fonts } from "react-native-elements/dist/config";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 //const windowWidth = Dimensions.get('window').width;
 //const windowHeight = Dimensions.get('window').height;
@@ -13,26 +15,6 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
-
-    useEffect(() => {
-        // Retrieve saved credentials from AsyncStorage on component mount
-        retrieveSavedCredentials();
-    }, []);
-
-    const retrieveSavedCredentials = async () => {
-        try {
-            const savedEmail = await AsyncStorage.getItem('email');
-            const savedPassword = await AsyncStorage.getItem('password');
-            if (savedEmail !== null && savedPassword !== null) {
-                setEmail(savedEmail);
-                setPassword(savedPassword);
-                setRememberMe(true);
-            }
-        } catch (error) {
-            console.error('Error retrieving saved credentials:', error);
-        }
-    };
-
 
     const handleLoginPress = async () => {
         try {
@@ -53,10 +35,17 @@ const Login = () => {
                 if (data.user && data.user.role) {
                     await AsyncStorage.setItem('role', data.user.role);
                     if (data.user.role === 'admin') {
+
+                        if (rememberMe === true) {
+                            await AsyncStorage.setItem('email', email);
+                            await AsyncStorage.setItem('password', password);
+
+                        }
+
                         Alert.alert('Success', 'Login successful');
                         navigation.navigate('Dashboard');
                     } else {
-                        Alert.alert('Success', 'Login Unsuccessful');
+                        Alert.alert('UnSuccess', 'Login Unsuccessful');
                         navigation.navigate('Login');
                     }
                 } else {
