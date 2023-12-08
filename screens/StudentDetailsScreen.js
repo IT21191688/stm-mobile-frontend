@@ -35,6 +35,8 @@ const StudentDetailsScreen = () => {
 
     const handleEdit = () => {
 
+        navigation.navigate("EditStudent")
+
 
     }
 

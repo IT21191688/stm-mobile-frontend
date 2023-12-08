@@ -1,57 +1,16 @@
-import axios from 'axios';
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, TextInput, View, TouchableOpacity, Image, Dimensions, ScrollView, Alert } from "react-native";
+import { StyleSheet, Text, TextInput, View, TouchableOpacity, Image, Dimensions, ScrollView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Picker } from "@react-native-picker/picker";
 import * as ImagePicker from 'expo-image-picker';
 
-const CreateStudent = () => {
+const EditStudent = () => {
     const navigation = useNavigation();
 
-    const [firstname, setFirstName] = useState('');
-    const [lastname, setLastName] = useState('');
-    const [age, setAge] = useState('');
-    const [grade, setGrade] = useState('');
-    const [email, setEmail] = useState('');
-    const [role, setRole] = useState('');
-    const [payment, setPayment] = useState('');
-    const [paymentType, setPaymentType] = useState('');
     const [selectedImage, setSelectedImage] = useState(null);
+
     const [selectedClasses, setSelectedClasses] = useState([]);
 
-
-    const [filteredClasses, setFilteredClasses] = useState([])
-
-
-    const [classData, setClassData] = useState([])
-
-    const handleClassChange = (value) => {
-        if (value !== "Select Class") {
-            setSelectedClasses([...selectedClasses, value]);
-            // console.log(selectedClasses)
-        }
-    };
-    const grades = [
-        { id: 1, name: 'Grade 1' },
-        { id: 2, name: 'Grade 2' },
-        { id: 3, name: 'Grade 3' },
-        { id: 4, name: 'Grade 4' },
-        { id: 5, name: 'Grade 5' },
-        { id: 6, name: 'Grade 6' },
-        { id: 7, name: 'Grade 7' },
-        { id: 8, name: 'Grade 8' },
-        { id: 9, name: 'Grade 9' },
-        { id: 10, name: 'Grade 10' },
-        { id: 11, name: 'Grade 11' },
-        { id: 12, name: 'Grade 12' },
-        { id: 13, name: 'Grade 13' },
-    ];
-
-    const removeClass = (index) => {
-        const updatedClasses = selectedClasses.filter((_, i) => i !== index);
-        setSelectedClasses(updatedClasses);
-
-    };
 
     useEffect(() => {
         (async () => {
@@ -60,41 +19,23 @@ const CreateStudent = () => {
                 alert('Sorry, we need camera roll permissions to make this work!');
             }
         })();
-
-        getClassDetails()
-
     }, []);
 
-    const getClassDetails = async () => {
-        //setIsLoading(true); // Set loading to true
 
-        try {
 
-            const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTY4YjFmZjlkZTcyYWNhNjY2ODA5YTIiLCJlbWFpbCI6InNhZGVlcGFsYWtzaGFuMDgwNEBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MDE5NzMxMDYsImV4cCI6MTcwMjU3NzkwNn0.de_o7V7FEnfY_Gj-0Xl7je9sw3n8WDwJWjV7QNZcg8o"
-            //const token = await AsyncStorage.getItem('token');
-            if (!token) {
-                console.error('Token is missing in AsyncStorage');
-                return;
-            }
-            const headers = {
-                'Authorization': `Bearer ${token}`,
-            };
-
-            const response = await axios.get("https://stm-backend.onrender.com/api/v1/class/getAllClassdetails", { headers });
-
-            if (response.data.isSuccessful) {
-                const fetchedData = response.data.data;
-                setClassData(fetchedData);
-                //console.log(fetchedData)
-            } else {
-                console.error("Failed to fetch Class Data:", response.data.message);
-            }
-        } catch (error) {
-            console.error("Error fetching Class Data:", error);
-        } finally {
-            //setIsLoading(false); 
+    const handleClassChange = (value) => {
+        if (value !== "Select Class") {
+            setSelectedClasses([...selectedClasses, value]);
         }
     };
+
+
+    const removeClass = (index) => {
+        const updatedClasses = selectedClasses.filter((_, i) => i !== index);
+        setSelectedClasses(updatedClasses);
+    };
+
+
 
     const selectImage = async () => {
         try {
@@ -113,61 +54,8 @@ const CreateStudent = () => {
         }
     };
 
-    const handleGradeChange = (selectedGrade) => {
-        // Filter class data based on the selected grade
-        setGrade(selectedGrade)
-        const filteredClasses = classData.filter(classItem => classItem.classGrade === selectedGrade);
-        // Update the class options based on the selected grade
-        setFilteredClasses(filteredClasses);
-    };
-
-
-    const handleSubmit = async () => {
-
-        try {
-
-            const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTY4YjFmZjlkZTcyYWNhNjY2ODA5YTIiLCJlbWFpbCI6InNhZGVlcGFsYWtzaGFuMDgwNEBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MDE5NzMxMDYsImV4cCI6MTcwMjU3NzkwNn0.de_o7V7FEnfY_Gj-0Xl7je9sw3n8WDwJWjV7QNZcg8o"
-
-            //const token = await AsyncStorage.getItem('token');
-            if (!token) {
-                console.error('Token is missing in AsyncStorage');
-                return;
-            }
-            const headers = {
-                'Authorization': `Bearer ${token}`,
-            };
-
-            // Create a request body object with the appointment details
-            const requestBody = {
-                firstname: firstname,
-                lastname: lastname,
-                age: age,
-                grade: grade,
-                email: email,
-                profileImage: "profile.jpg",
-                role: "user",
-                classes: selectedClasses,
-                payementType: paymentType,
-                status: 1
-            };
-
-            const response = await axios.post(
-                'https://stm-backend.onrender.com/api/v1/student/sturegister',
-                requestBody,
-                { headers }
-            );
-
-            if (response.data.isSuccessful) {
-                Alert.alert("Successfully Created New Student");
-                navigation.navigate("Dashboard")
-            } else {
-                Alert.alert("Failed Try Again: " + response.data.message);
-                navigation.navigate("Dashboard")
-            }
-        } catch (error) {
-            console.error('Error creating student:', error);
-            Alert.alert("Failed to Create Student: " + error.message);
-        }
+    const handleSubmit = () => {
+        // Add your logic for handling submit here
     };
 
     // Your cancel function
@@ -195,7 +83,7 @@ const CreateStudent = () => {
 
             <View style={styles.container}>
 
-                <Text style={styles.createStudentText}>Create Student</Text>
+                <Text style={styles.createStudentText}>Edit Student</Text>
 
                 <ScrollView style={styles.inputContainerScroller} showsVerticalScrollIndicator={false}>
 
@@ -206,7 +94,7 @@ const CreateStudent = () => {
                             style={styles.input}
                             placeholder="Sadeepa"
                             placeholderTextColor="rgba(13, 1, 64, 0.6)"
-                            onChangeText={text => setFirstName(text)}
+                            onChangeText={text => setEmail(text)}
                         />
 
                     </View>
@@ -218,7 +106,7 @@ const CreateStudent = () => {
                             style={styles.input}
                             placeholder="Last Name"
                             placeholderTextColor="rgba(13, 1, 64, 0.6)"
-                            onChangeText={text => setLastName(text)}
+                            onChangeText={text => setEmail(text)}
                         />
 
                     </View>
@@ -243,7 +131,7 @@ const CreateStudent = () => {
                             style={styles.input}
                             placeholder="28"
                             placeholderTextColor="rgba(13, 1, 64, 0.6)"
-                            onChangeText={text => setAge(text)}
+                            onChangeText={text => setEmail(text)}
                             keyboardType="numeric"
                         />
 
@@ -251,57 +139,46 @@ const CreateStudent = () => {
 
                     {/*Grade section Should update*/}
                     <View style={styles.inputContainer}>
+
                         <Text style={styles.inputLabel}>Grade</Text>
                         <Picker
                             style={styles.picker}
-                            selectedValue={grade}
-                            onValueChange={(value) => handleGradeChange(value)}
+                            //selectedValue={selectedPaymentType}
+                            onValueChange={(value) => handlePaymentTypeChange(value)}
                         >
-                            <Picker.Item style={styles.pickerItem} label="Select Grade" value="" />
-                            {grades.map((gradeItem) => (
-                                <Picker.Item
-                                    style={styles.pickerItem}
-                                    key={gradeItem.id}
-                                    label={gradeItem.name}
-                                    value={gradeItem.name}
-                                />
-                            ))}
+                            <Picker.Item style={styles.pickerItem} label="Grade" value="Full Pay" />
                         </Picker>
+
+
                     </View>
 
 
                     <View style={styles.inputContainer}>
+
                         <Text style={styles.inputLabel}>Select Class</Text>
                         <Picker
                             style={styles.picker}
-                            selectedValue={"Select Class"}
+                            selectedValue={"Select Class"} // Provide a selectedValue for the Picker
                             onValueChange={(value) => handleClassChange(value)}
                         >
                             <Picker.Item style={styles.pickerItem} label="Select Class" value="Select Class" />
-                            {filteredClasses.map((classItem) => (
-                                <Picker.Item
-                                    key={classItem._id}
-                                    label={`${classItem.classGrade} - ${classItem.className}`}
-                                    value={classItem._id}
-                                />
-                            ))}
+                            <Picker.Item style={styles.pickerItem} label="Class A" value="Class A" />
+                            <Picker.Item style={styles.pickerItem} label="Class B" value="Class B" />
+                            {/* Add other class options as Picker.Item */}
                         </Picker>
-                    </View>
 
+                    </View>
 
 
                     <View style={styles.inputContainer}>
 
                         <View style={styles.selectedClassesContainer}>
                             <Text>Selected Classes:</Text>
-                            {selectedClasses.map((classItem, index) => {
-                                const selectedClassName = classData.find(item => item._id === classItem)?.className;
-                                return (
-                                    <TouchableOpacity key={index} onPress={() => removeClass(index)}>
-                                        <Text>{selectedClassName}</Text>
-                                    </TouchableOpacity>
-                                );
-                            })}
+                            {selectedClasses.map((classItem, index) => (
+                                <TouchableOpacity key={index} onPress={() => removeClass(index)}>
+                                    <Text>{classItem}</Text>
+                                </TouchableOpacity>
+                            ))}
                         </View>
                     </View>
 
@@ -316,16 +193,15 @@ const CreateStudent = () => {
 
                     <View style={styles.inputContainer}>
 
-                        <Text style={styles.inputLabel}>Payment Type</Text>
+                        <Text style={styles.inputLabel}>Status</Text>
                         <Picker
                             style={styles.picker}
-                            selectedValue={paymentType} // Provide a selectedValue for the Picker
-                            onValueChange={(value) => setPaymentType(value)}
+                            selectedValue={"Select Class"} // Provide a selectedValue for the Picker
+                            onValueChange={(value) => handleClassChange(value)}
                         >
-                            <Picker.Item style={styles.pickerItem} label="Payment Type" value="Payment Type" />
-                            <Picker.Item style={styles.pickerItem} label="Full" value="Full" />
-                            <Picker.Item style={styles.pickerItem} label="Half" value="Half" />
-                            <Picker.Item style={styles.pickerItem} label="Free" value="Free" />
+                            <Picker.Item style={styles.pickerItem} label="Status" value="Status" />
+                            <Picker.Item style={styles.pickerItem} label="Class A" value="Class A" />
+                            <Picker.Item style={styles.pickerItem} label="Class B" value="Class B" />
                             {/* Add other class options as Picker.Item */}
                         </Picker>
 
@@ -342,8 +218,6 @@ const CreateStudent = () => {
                         </TouchableOpacity>
 
                     </View>
-
-
 
 
                 </ScrollView>
@@ -447,6 +321,9 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
     },
 
+
+
+
     btnGroup: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -495,6 +372,4 @@ const styles = StyleSheet.create({
         height: 50
     }
 });
-
-
-export default CreateStudent;
+export default EditStudent;

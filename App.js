@@ -10,6 +10,7 @@ import StudentDetailsScreen from "./screens/StudentDetailsScreen";
 import PayScreen from "./screens/PayScreen";
 import StudentsHome from "./screens/StudentsHome";
 import CreateStudent from "./screens/CreateStudent";
+import EditStudent from "./screens/EditStudent";
 
 const Stack = createNativeStackNavigator();
 
@@ -39,6 +40,12 @@ const App = () => {
         <Stack.Screen
           name="StudentDetailsScreen"
           component={StudentDetailsScreen}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name="EditStudent"
+          component={EditStudent}
           options={{ headerShown: false }}
         />
 
