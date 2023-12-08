@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, TextInput, View, TouchableOpacity, Image, Dimensions } from "react-native";
 import { CheckBox } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
@@ -14,13 +14,67 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
 
-    const handleSignUpPress = () => {
-        navigation.navigate("SignUp");
+    useEffect(() => {
+        // Retrieve saved credentials from AsyncStorage on component mount
+        retrieveSavedCredentials();
+    }, []);
+
+    const retrieveSavedCredentials = async () => {
+        try {
+            const savedEmail = await AsyncStorage.getItem('email');
+            const savedPassword = await AsyncStorage.getItem('password');
+            if (savedEmail !== null && savedPassword !== null) {
+                setEmail(savedEmail);
+                setPassword(savedPassword);
+                setRememberMe(true);
+            }
+        } catch (error) {
+            console.error('Error retrieving saved credentials:', error);
+        }
     };
 
+
     const handleLoginPress = async () => {
-        // ... (your login logic)
+        try {
+            const response = await axios.post('https://stm-backend.onrender.com/api/v1/auth/login', {
+                email,
+                password,
+            });
+
+            if (response.status === 200) {
+                const { data } = response.data;
+
+                if (data.token) {
+                    await AsyncStorage.setItem('token', data.token);
+                } else {
+                    console.error('Token is missing or undefined');
+                }
+
+                if (data.user && data.user.role) {
+                    await AsyncStorage.setItem('role', data.user.role);
+                    if (data.user.role === 'admin') {
+                        Alert.alert('Success', 'Login successful');
+                        navigation.navigate('Dashboard');
+                    } else {
+                        Alert.alert('Success', 'Login Unsuccessful');
+                        navigation.navigate('Login');
+                    }
+                } else {
+                    console.error('User role is missing or undefined');
+                }
+
+            } else {
+
+                Alert.alert('Unsuccessful', 'Login Unsuccessful');
+                console.error('Login failed:', response.statusText);
+            }
+        } catch (error) {
+
+            Alert.alert('Unsuccessful', 'Login Unsuccessful');
+            console.error('Login error:', error);
+        }
     };
+
 
     const fogotPassword = () => {
         // ... (your forgot password logic)

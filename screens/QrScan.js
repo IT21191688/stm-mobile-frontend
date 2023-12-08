@@ -1,7 +1,9 @@
+import axios from 'axios';
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Image, Alert } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const QrScan = () => {
     const navigation = useNavigation();
@@ -18,16 +20,7 @@ const QrScan = () => {
     const handleBarCodeScanned = ({ type, data }) => {
         setScanned(true);
 
-        if (scanned === true) {
-
-
-
-
-
-        }
-
-
-
+        handleScan(type, data);
     };
 
     if (hasPermission === null) {
@@ -36,6 +29,56 @@ const QrScan = () => {
     if (hasPermission === false) {
         return <Text>No access to camera</Text>;
     }
+
+    const handleScan = async (type, data) => {
+        if (type === 256) {
+            try {
+                const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTY4YjFmZjlkZTcyYWNhNjY2ODA5YTIiLCJlbWFpbCI6InNhZGVlcGFsYWtzaGFuMDgwNEBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MDIwMTUwNDIsImV4cCI6MTcwMjYxOTg0Mn0.eUCGCMZJm3EjBRfX2z5WjmjCcxOkiGQI5qfww2cT8DA"
+
+                //const token = await AsyncStorage.getItem('token');
+                if (!token) {
+                    console.error('Token is missing in AsyncStorage');
+                    return;
+                }
+                const headers = {
+                    'Authorization': `Bearer ${token}`,
+                };
+
+
+                const response = await axios.get(
+                    `https://stm-backend.onrender.com/api/v1/student/getStudentDetails/${data}`,
+                    { headers }
+                );
+
+                if (response.data.isSuccessful) {
+
+                    saveStudentId(response.data.data._id)
+                    Alert.alert("Scan Success");
+                    navigation.navigate("StudentDetailsScreen")
+                } else {
+                    Alert.alert("Failed Try Again: " + response.data.message);
+                    navigation.navigate("Dashboard")
+                }
+            } catch (error) {
+                console.error('Error creating student:', error);
+                Alert.alert("Failed Try again" + error.message);
+            }
+
+
+        }
+
+
+    };
+
+
+    const saveStudentId = async (studentId) => {
+        try {
+            await AsyncStorage.setItem("studentId", studentId);
+            console.log("Student ID saved successfully:", studentId);
+        } catch (error) {
+            console.error("Error saving student ID:", error);
+        }
+    };
 
     return (
 
