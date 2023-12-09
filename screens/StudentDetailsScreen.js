@@ -46,7 +46,7 @@ const StudentDetailsScreen = () => {
 
             if (response.data.isSuccessful) {
                 setStudentDetails(response.data.data);
-                console.log("studentDetails Success")
+                // console.log("studentDetails Success")
             } else {
                 throw new Error("Failed to get student details: " + response.data.message);
             }
@@ -100,27 +100,29 @@ const StudentDetailsScreen = () => {
                 throw new Error('Token is missing in AsyncStorage');
             }
 
+            //console.log(token);
             const headers = {
                 'Authorization': `Bearer ${token}`,
             };
 
             const today = new Date(); // Get today's date
 
+
             const newDate = {
-                newDate: [
-                    { value: 1 }
-                    // You can add more objects for additional values if needed
-                ]
-            }
+                date: today,
+                attended: false // Set to true or false based on the attendance status
+            };
             try {
                 const response = await axios.patch(
-                    `https://stm-backend.onrender.com/api/v1/updateAttendance/${id}`,
+                    `https://stm-backend.onrender.com/api/v1/attendance/updateAttendance/${id}`,
                     { newDate },
                     { headers }
                 );
 
                 if (response.data.isSuccessful) {
-                    console.log('Attendance updated successfully:', response.data.data);
+
+                    getStudentAttendance();
+                    // console.log('Attendance updated successfully:', response.data.data);
                     // You might want to update state or perform other operations here
                 } else {
                     console.error('Failed to update attendance:', response.data.message);
@@ -152,7 +154,7 @@ const StudentDetailsScreen = () => {
         } else {
             const MAX_DAYS = 5
             // Calculate progress based on the length of days array
-            Alert.alert(Math.min(1, daysLength / MAX_DAYS))
+            //Alert.alert(Math.min(1, daysLength / MAX_DAYS))
             return Math.min(1, daysLength / MAX_DAYS); // Ensure the progress does not exceed 1
         }
     };
