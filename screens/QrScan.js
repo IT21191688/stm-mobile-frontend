@@ -52,9 +52,10 @@ const QrScan = () => {
 
                 if (response.data.isSuccessful) {
 
-                    saveStudentId(response.data.data._id)
+                    //saveStudentId(response.data.data._id)
                     Alert.alert("Scan Success");
-                    navigation.navigate("StudentDetailsScreen")
+                    const studentId = response.data.data._id;
+                    navigation.navigate("StudentDetailsScreen", { studentId });
                 } else {
                     Alert.alert("Failed Try Again: " + response.data.message);
                     navigation.navigate("Dashboard")

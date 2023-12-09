@@ -2,10 +2,15 @@ import axios from 'axios';
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView, FlatList, ProgressBarAndroid, Button, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { useRoute } from '@react-navigation/native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const StudentDetailsScreen = () => {
+
+
+    const route = useRoute();
     const navigation = useNavigation();
+    const { studentId } = route.params;
 
     const [progress, setProgress] = useState(0);
     const [studentDetails, setStudentDetails] = useState({});
@@ -37,7 +42,10 @@ const StudentDetailsScreen = () => {
             const headers = {
                 'Authorization': `Bearer ${token}`,
             };
-            const studentId = await AsyncStorage.getItem('studentId');
+
+            const { studentId } = route.params;
+            console.log(studentId);
+            //const studentId = await AsyncStorage.getItem('studentId');
 
             const response = await axios.get(
                 `https://stm-backend.onrender.com/api/v1/student/getStudentDetails/${studentId}`,
@@ -67,7 +75,9 @@ const StudentDetailsScreen = () => {
                 'Authorization': `Bearer ${token}`,
             };
 
-            const studentId = await AsyncStorage.getItem('studentId');
+            const { studentId } = route.params;
+            console.log(studentId);
+            //const studentId = await AsyncStorage.getItem('studentId');
             const currentDate = new Date();
             const month = currentDate.getMonth() + 1;
             const year = currentDate.getFullYear();

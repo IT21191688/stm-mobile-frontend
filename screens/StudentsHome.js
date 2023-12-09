@@ -1,35 +1,88 @@
-import React, { useState } from "react";
+import axios from 'axios';
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, TextInput, View, TouchableOpacity, Image, Dimensions, FlatList } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Picker } from "@react-native-picker/picker";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const StudentsHome = () => {
     const navigation = useNavigation();
 
     const [selectedGrade, setSelectedGrade] = useState('');
+    const [studentsDetails, setStudentDetails] = useState([]);
+    const [searchText, setSearchText] = useState('');
+    const [grade, setGrades] = useState([]);
+
+    useEffect(() => {
+        getStudentDetails();
+        generateGrades();
+    }, []);
+
+
+
+    const getStudentDetails = async () => {
+        try {
+            const token = await AsyncStorage.getItem('token');
+            if (!token) {
+                throw new Error('Token is missing in AsyncStorage');
+            }
+            const headers = {
+                'Authorization': `Bearer ${token}`,
+            };
+            //const studentId = await AsyncStorage.getItem('studentId');
+
+            const response = await axios.get(
+                'https://stm-backend.onrender.com/api/v1/student/getAllStudentDetails',
+                { headers }
+            );
+
+            if (response.data.isSuccessful) {
+                setStudentDetails(response.data.data);
+                //console.log("studentDetails Success", response.data.data);
+                //return response.data.data; // Return the data on success
+            } else {
+                throw new Error("Failed to get student details: " + response.data.message);
+            }
+        } catch (error) {
+            console.error('Error fetching student details:', error);
+            throw error; // Re-throw the error to maintain the rejected Promise
+        }
+    };
+
+
+    const handleStudentPress = (studentId) => {
+
+        navigation.navigate('StudentDetailsScreen', { studentId });
+
+
+    };
+
+
+    const handleSearch = (text) => {
+        setSearchText(text);
+        // Filter the studentsDetails array based on the email
+        const filteredStudents = studentsDetails.filter(student =>
+            student.email.toLowerCase().includes(text.toLowerCase())
+        );
+        setStudentDetails(filteredStudents);
+    };
 
     const handleGradeChange = (value) => {
         setSelectedGrade(value);
-        // Perform actions or state updates based on the selected grade here
+        // Filter students based on the selected grade
+        const filteredStudents = studentsDetails.filter(student =>
+            student.grade === `Grade ${value}`
+        );
+        setStudentDetails(filteredStudents);
     };
 
-    const grade = [
-        { id: '1', grade: 'Grade 1' },
-        { id: '2', grade: 'Grade 2' },
-        { id: '3', grade: 'Grade 3' },
-        // Add more grades as needed
-    ];
-
-
-    const data = [
-        { id: '1', text: 'Mathematics' },
-        { id: '2', text: 'Science' },
-        { id: '3', text: 'History' },
-        { id: '4', text: 'Geography' },
-        { id: '5', text: 'English' },
-        { id: '6', text: 'English' },
-        // Add more data as needed
-    ];
+    const generateGrades = () => {
+        const grades = [];
+        for (let i = 1; i <= 13; i++) {
+            grades.push({ id: `${i}`, grade: `Grade ${i}` });
+        }
+        setGrades(grades);
+    };
 
 
     const handleAttendance = () => {
@@ -57,17 +110,29 @@ const StudentsHome = () => {
 
 
 
-    const renderItem = ({ item }) => (
-        <View style={styles.studentClass}>
-            <Text style={styles.studentText}>{item.text}</Text>
-            <Text style={styles.studentText}>Grade 10</Text>
-            <Text style={styles.studentText}>Grade 10</Text>
-
-
-
-        </View>
-    );
-
+    const renderItem = ({ item }) => {
+        return (
+            <TouchableOpacity style={styles.studentClass} onPress={() => handleStudentPress(item._id)}>
+                <Text style={styles.studentName}>{item.firstname} {item.lastname}</Text>
+                <View style={styles.infoContainer}>
+                    <Text style={styles.infoLabel}>Grade:</Text>
+                    <Text style={styles.infoText}>{item.grade}</Text>
+                </View>
+                <View style={styles.infoContainer}>
+                    <Text style={styles.infoLabel}>Age:</Text>
+                    <Text style={styles.infoText}>{item.age}</Text>
+                </View>
+                <View style={styles.infoContainer}>
+                    <Text style={styles.infoLabel}>Payment Type:</Text>
+                    <Text style={styles.infoText}>{item.paymentType}</Text>
+                </View>
+                <View style={styles.infoContainer}>
+                    <Text style={styles.infoLabel}>Email:</Text>
+                    <Text style={styles.infoText}>{item.email}</Text>
+                </View>
+            </TouchableOpacity>
+        );
+    };
 
 
     return (
@@ -98,13 +163,14 @@ const StudentsHome = () => {
                             style={styles.searchImage}
                             contentFit="cover"
                             source={require("../assets/search.png")}
+
                         />
 
                         <TextInput
                             style={styles.input}
                             placeholder="Search"
                             placeholderTextColor="rgba(13, 1, 64, 0.6)"
-                            onChangeText={text => setEmail(text)}
+                            onChangeText={handleSearch}
                         />
 
                     </View>
@@ -114,14 +180,14 @@ const StudentsHome = () => {
                     <View style={styles.rowContainer}>
 
                         <View style={styles.pickerContainer}>
-
                             <Picker
                                 style={styles.picker}
                                 selectedValue={selectedGrade}
-                                onValueChange={(value) => handlePaymentTypeChange(value)}
+                                onValueChange={handleGradeChange}
                             >
                                 {grade.map((gradeItem) => (
-                                    <Picker.Item style={styles.pickerItem}
+                                    <Picker.Item
+                                        style={styles.pickerItem}
                                         key={gradeItem.id}
                                         label={gradeItem.grade}
                                         value={gradeItem.id}
@@ -129,27 +195,6 @@ const StudentsHome = () => {
                                 ))}
                             </Picker>
                         </View>
-
-                        <View style={styles.pickerContainer}>
-
-                            <Picker
-                                style={styles.picker}
-                                selectedValue={selectedGrade}
-                                onValueChange={(value) => handlePaymentTypeChange(value)}
-                            >
-                                {grade.map((gradeItem) => (
-                                    <Picker.Item style={styles.pickerItem}
-                                        key={gradeItem.id}
-                                        label={gradeItem.grade}
-                                        value={gradeItem.id}
-                                    />
-                                ))}
-                            </Picker>
-                        </View>
-
-
-
-
 
 
                     </View>
@@ -167,7 +212,7 @@ const StudentsHome = () => {
                     <FlatList
                         showsVerticalScrollIndicator={false}
                         style={styles.studentClassContainer}
-                        data={data}
+                        data={studentsDetails}
                         keyExtractor={(item) => item.id}
                         renderItem={renderItem}
                     />
@@ -247,7 +292,7 @@ const styles = StyleSheet.create({
         borderColor: '#CCCCCC',
         borderRadius: 20,
         overflow: 'hidden',
-        width: '46%',
+        width: '90%',
         flexDirection: 'row',
 
     },
@@ -289,16 +334,7 @@ const styles = StyleSheet.create({
 
     },
 
-    studentClass: {
-        width: '100%',
-        height: 150, // Adjust the height to 50% of the parent height (300 / 2 = 150)
-        backgroundColor: '#D4D7F5',
-        borderRadius: 20,
-        paddingBottom: 20,
-        marginBottom: 10,
-        padding: 10
-        // Other styles for the student class container can be added here
-    },
+
     studentText: {
 
         fontSize: 19,
@@ -337,6 +373,41 @@ const styles = StyleSheet.create({
         top: '-28%'
 
     }
+    ,
+    studentClass1: {
+        width: '100%',
+        height: 150, // Adjust the height to 50% of the parent height (300 / 2 = 150)
+        backgroundColor: '#D4D7F5',
+        borderRadius: 20,
+        paddingBottom: 20,
+        marginBottom: 10,
+        padding: 10
+        // Other styles for the student class container can be added here
+    },
+
+    studentClass: {
+        width: '100%',
+        backgroundColor: '#D4D7F5',
+        borderRadius: 20,
+        padding: 20,
+        marginBottom: 10,
+    },
+    studentName: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginBottom: 10,
+    },
+    infoContainer: {
+        flexDirection: 'row',
+        marginBottom: 5,
+    },
+    infoLabel: {
+        fontWeight: 'bold',
+        marginRight: 5,
+    },
+    infoText: {
+        flex: 1,
+    },
 
 
 });

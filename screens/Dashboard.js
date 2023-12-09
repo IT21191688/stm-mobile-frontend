@@ -27,7 +27,7 @@ const Dashboard = () => {
     const handleTeacher = () => {
 
 
-        navigation.navigate('StudentDetailsScreen')
+        //navigation.navigate('StudentDetailsScreen')
 
 
     }
